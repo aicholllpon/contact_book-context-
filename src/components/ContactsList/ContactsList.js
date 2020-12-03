@@ -8,7 +8,8 @@ const ContactsList = () => {
         getContactsData,
         contacts,
         deleteData,
-        editContact
+        editContact,
+        details
     } = useContext(contactsContext)
 
     useEffect(() => {
@@ -19,13 +20,25 @@ const ContactsList = () => {
         <div>
             {contacts.map(item => (
                 <ul className="ul" key={item.id}>
-                    <li>{item.name} {item.surname} {item.phone}
+
+
+                    <li>
+                        <Link to="/details" onClick={() => details(item.id)}>
+
+                            {item.name} {item.surname} {item.phone}
+
+                        </Link>
+
                         <button onClick={() => deleteData(item.id)} className="btn-delete">Delete</button>
 
                         <Link to="/edit">
+
                             <button onClick={() => editContact(item.id)}>Edit</button>
+
                         </Link>
+
                     </li>
+
                 </ul>
             ))}
         </div>

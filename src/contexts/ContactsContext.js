@@ -5,7 +5,8 @@ export const contactsContext = React.createContext();
 
 const INIT_STATE = {
     contacts: [],
-    taskToEdit: null
+    taskToEdit: null,
+    detailContact: []
 }
 
 const reducer = (state = INIT_STATE, action) => {
@@ -14,6 +15,8 @@ const reducer = (state = INIT_STATE, action) => {
             return { ...state, contacts: action.payload }
         case "EDIT_CONTACTS":
             return { ...state, taskToEdit: action.payload }
+        case "DETAIL_CONTACTS":
+            return { ...state, detailContact: action.payload }
         default: return state
     }
 }
@@ -41,8 +44,7 @@ const ContactsContextProvider = ({ children }) => {
     }
 
     async function editContact(id) {
-        const { data } = await axios(`http://localhost:8000/contacts/${id}`)
-        console.log('EDIT_CONTACT', data);
+        const { data } = await axios.patch(`http://localhost:8000/contacts/${id}`)
         dispatch({
             type: "EDIT_CONTACTS",
             payload: data
@@ -62,15 +64,26 @@ const ContactsContextProvider = ({ children }) => {
         }
     }
 
+    async function details(id) {
+        const { data } = await axios(`http://localhost:8000/contacts/${id}`)
+        dispatch({
+            type: "DETAIL_CONTACTS",
+            payload: data
+        })
+    }
+    console.log(state.detailContact)
+
     return (
         <contactsContext.Provider value={{
             contacts: state.contacts,
             taskToEdit: state.taskToEdit,
+            detailContact: state.detailContact,
             addNewContact,
             getContactsData,
             deleteData,
             editContact,
-            saveTask
+            saveTask,
+            details,
         }}>
             {children}
         </contactsContext.Provider>
